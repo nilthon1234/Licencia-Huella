@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: Licencia-Huella
+
+
+licencia:
+  claveEncriptada: "AKSJE9283KLSJD9823"
+
+server:
+  port: 9090
