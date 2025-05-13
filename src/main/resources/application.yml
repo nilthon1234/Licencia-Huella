@@ -1,6 +1,9 @@
 spring:
   application:
     name: Licencia-Huella
+  web:
+    resources:
+      static-locations: classpath:/static/
 
 
 licencia:

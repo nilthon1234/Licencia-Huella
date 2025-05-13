@@ -31,18 +31,24 @@ public class EncriptadorHuella {
     }
 
     public static String leerHuellaDesencriptada() throws Exception{
+        Path archivo = Paths.get(RUTA_ARCHIVO);
+
+        // Check if file exists before attempting to read
+        if (!Files.exists(archivo)) {
+            throw new java.nio.file.NoSuchFileException(RUTA_ARCHIVO);
+        }
+
         byte[] claveBytes = CLAVE_SECRETA.getBytes();
         SecretKeySpec clave = new SecretKeySpec(claveBytes, "AES");
 
-
-        byte[]  archivoBytes = Files.readAllBytes(Paths.get(RUTA_ARCHIVO));
+        byte[] archivoBytes = Files.readAllBytes(archivo);
         byte[] encryptedBytes = Base64.getDecoder().decode(archivoBytes);
 
         Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.ENCRYPT_MODE, clave);
+        // The key issue: Changed ENCRYPT_MODE to DECRYPT_MODE
+        cipher.init(Cipher.DECRYPT_MODE, clave);
         byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
         return new String(decryptedBytes);
-
     }
 
 }
