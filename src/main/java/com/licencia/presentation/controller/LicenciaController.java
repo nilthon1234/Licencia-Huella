@@ -7,6 +7,7 @@ import com.licencia.service.http.request.LicenciaRequest;
 import com.licencia.service.implement.LicenciaValidacionService;
 import com.licencia.service.interfaces.IArchivoHuellaService;
 import com.licencia.service.interfaces.ITokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,7 +65,7 @@ public class LicenciaController {
     public ResponseEntity<?> verificar(@RequestBody Map<String, String> body) {
         String licencia = body.get("licencia");
 
-        if (!servicio.validarLicencia(licencia)) {
+        if (!servicio.isLicenciaValida(licencia)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Licencia inválida o expirada");
         }
 
@@ -81,20 +82,13 @@ public class LicenciaController {
     }
 
     @PostMapping("/validar-licencia")
-    public ResponseEntity<?> validar(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> validar(@RequestBody Map<String, String> body, HttpServletResponse response) {
         String licenciaEnc = body.get("licenciaEncriptada");
 
         try {
             String licencia = servicio.desencriptar(licenciaEnc);
-            if (servicio.validarLicencia(licencia)) {
-                Map<String, Object> respuesta = new HashMap<>();
-                respuesta.put("message", "licencia activa, acceso permitido");
-                respuesta.put("token",licencia);
-                return ResponseEntity.ok(respuesta);
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Licencia expirada");
-            }
-
+            // Llama al método del servicio que maneja la lógica de validación y cookies
+            return servicio.validarLicencia(response, body);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Licencia no válida");
         }
