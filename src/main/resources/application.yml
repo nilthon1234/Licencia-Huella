@@ -5,6 +5,19 @@ spring:
     resources:
       static-locations: classpath:/static/
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/admin_gestion_today
+    username: root
+    password: mysql
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 
 licencia:
   claveEncriptada: "AKSJE9283KLSJD9823"

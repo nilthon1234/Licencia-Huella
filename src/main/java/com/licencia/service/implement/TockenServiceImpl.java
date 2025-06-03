@@ -17,8 +17,10 @@ import java.util.Date;
 @Service
 public class TockenServiceImpl implements ITokenService {
 
-    private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor
             ("424J33K53J556N5M6M7N6K8M6K8M68M@-35353@3535".getBytes(StandardCharsets.UTF_8));
+    final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+
 
     @Override
     public String generetaToken(String fingerprint) {
@@ -26,7 +28,7 @@ public class TockenServiceImpl implements ITokenService {
                 .setSubject("licencia-validada")
                 .claim("fingerprint", fingerprint)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 100L * 60 * 60 * 24 * 365 ))//1 AÑO
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME ))//1 AÑO
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
