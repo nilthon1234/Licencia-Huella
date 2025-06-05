@@ -10,4 +10,6 @@ import java.util.List;
 public interface IRepositoryWinLin extends JpaRepository<WinLin,Integer> {
 
     List<WinLin> findAll();
+
+    boolean existsByWiniIncrip(String licenciaEnc);
 }

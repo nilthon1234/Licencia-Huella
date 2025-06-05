@@ -81,18 +81,30 @@ public class LicenciaController {
         }
     }
 
+    @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
     @PostMapping("/validar-licencia")
     public ResponseEntity<?> validar(@RequestBody Map<String, String> body, HttpServletResponse response) {
-        String licenciaEnc = body.get("licenciaEncriptada");
-
         try {
-            String licencia = servicio.desencriptar(licenciaEnc);
+
             // Llama al método del servicio que maneja la lógica de validación y cookies
             return servicio.validarLicencia(response, body);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Licencia no válida");
         }
     }
+    @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
+    @GetMapping("/validar-licencia-cookie")
+    public ResponseEntity<?> validarLicenciaCookie(@CookieValue(value = "licenciaToken", required = false) String licenciaToken) {
+        if (licenciaToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No hay cookie de licencia");
+        }
+        if (servicio.isLicenciaValida(licenciaToken)) {
+            return ResponseEntity.ok("Licencia válida");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Licencia expirada");
+        }
+    }
+
 
 
 }
