@@ -19,7 +19,7 @@ public class TockenServiceImpl implements ITokenService {
 
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor
             ("424J33K53J556N5M6M7N6K8M6K8M68M@-35353@3535".getBytes(StandardCharsets.UTF_8));
-    final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+    final long EXPIRATION_TIME = 30L * 24 * 60 * 60 * 1000;
 
 
     @Override
